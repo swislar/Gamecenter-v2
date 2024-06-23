@@ -1,0 +1,120 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+body {
+  --framer-purple: #3f5277;
+  --grey-blue: #667fae;
+  --sakura: #f2e9e4;
+  --sakuraHover: #c9ada7;
+
+  --accent: var(--framer-purple);
+  --darkBackground: rgb(30, 41, 59);
+  --darkText: #f3f5f5;
+  --darkNavbar: rgb(21, 94, 117);
+  --darkAccent: rgb(21, 94, 117);
+  --darkPrivacy: #2a3750;
+  --lightBackground: #ccd5ae;
+  --lightText: #333a3e;
+  --lightNavbar: #edbd91;
+  --lightAccent: #edbd91;
+  --lightPrivacy: #d2b48c;
+
+  --lightText: #053225;
+  --lightMenuBackground: #e9edc9;
+  --lightMenuButton: #faedcd;
+  --lightMenuButtonHover: #d4a373;
+  --lightAccent: #fefae0;
+
+  --Text: #f2e9e4;
+  --MenuBackground: #4a4e69;
+  --MenuButton: #9a8c98;
+  --MenuButtonHover: #c9ada7;
+  --darkAccent: #22223b;
+
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  min-width: 322px;
+  width: 100vw;
+  height: 100vh;
+  font-family: "Poppins", sans-serif;
+  background-color: var(--darkBackground);
+  color: var(--darkText);
+  transition: color 0.35s linear, background-color 1s ease;
+}
+
+.menu-border {
+  background-color: var(--Text);
+}
+
+.menu {
+  background-color: var(--MenuBackground);
+}
+
+.menu-outline {
+  border-color: var(--MenuButtonHover);
+}
+
+.menu-button {
+  background-color: var(--MenuButton);
+  transition: background-color 0.3s ease-in, color 0.3 linear;
+  user-select: none;
+
+  &:hover {
+    background-color: var(--MenuButtonHover);
+    color: var(--darkAccent);
+  }
+}
+
+.menu-button-special {
+  background-color: var(--MenuBackground);
+  transition: background-color 0.3s ease-in, color 0.3 linear;
+
+  &:hover {
+    background-color: var(--MenuButton);
+    color: var(--darkAccent);
+  }
+}
+
+:root {
+  --grey-blue: #667fae;
+}
+
+.text-outline {
+  -webkit-text-stroke-width: 0.3px;
+  -webkit-text-stroke-color: black;
+}
+
+.text-shadow {
+  text-shadow: 1px 1px 1px #22223b;
+}
+
+.privacy-screen-dark {
+  position: fixed;
+  background-color: var(--darkPrivacy);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+}
+
+.privacy-screen-light {
+  position: fixed;
+  background-color: var(--lightPrivacy);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+}
+
+.parent .child:nth-child(2n + 1) {
+  flex-direction: row-reverse;
+}
+
+.legoman-canvas {
+  width: 100vw;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
