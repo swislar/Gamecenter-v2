@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Eye, EyeOff } from "react-feather";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/authContext";
@@ -12,6 +12,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+  const formRef = useRef();
 
   const { login, currentUser, setCurrentUser, adminLogin, guestLogin } =
     useContext(AuthContext);
@@ -39,6 +40,19 @@ const Login = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        formRef.current.submit();
+      }
+      window.addEventListener("keypress", handleKeyPress);
+    };
+    return () => {
+      window.removeEventListener("keypress", handleKeyPress);
+    };
+  }, [handleSubmit]);
 
   return (
     <>
@@ -72,8 +86,14 @@ const Login = () => {
                     </motion.p>
                   </span>
                   <div className="flex flex-row items-center pr-6 relative">
-                    <form className="flex flex-col px-2 py-1 md:flex-row">
+                    <form
+                      ref={formRef}
+                      onSubmit={handleSubmit}
+                      className="flex flex-col px-2 py-1 md:flex-row"
+                    >
+                      <button type="submit" />
                       <input
+                        required
                         type="text"
                         name="username"
                         placeholder="username"
@@ -83,6 +103,7 @@ const Login = () => {
                       />
                       <span className="flex flex-row items-center justify-center">
                         <input
+                          required
                           type={showPassword ? "text" : "password"}
                           name="password"
                           placeholder="password"

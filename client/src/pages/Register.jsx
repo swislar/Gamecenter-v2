@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { EyeOff, Eye } from "react-feather";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -15,6 +15,7 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+  const formRef = useRef();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -41,6 +42,19 @@ const Register = () => {
     }
   };
 
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        formRef.current.submit();
+      }
+      window.addEventListener("keypress", handleKeyPress);
+    };
+    return () => {
+      window.removeEventListener("keypress", handleKeyPress);
+    };
+  }, [handleSubmit]);
+
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
@@ -65,7 +79,12 @@ const Register = () => {
                       Register your account here!
                     </div>
                     <span className="text-center text-xs pt-1">{error}</span>
-                    <div className="flex flex-col items-left my-3">
+                    <form
+                      ref={formRef}
+                      onSubmit={handleSubmit}
+                      className="flex flex-col items-left my-3"
+                    >
+                      <button type="submit" />
                       <input
                         required
                         type="text"
@@ -101,7 +120,7 @@ const Register = () => {
                           />
                         )}
                       </div>
-                    </div>
+                    </form>
                     <span
                       className="flex justify-center items-center w-full ease-in duration-100 hover:cursor-pointer border-2 border-cyan-200 menu-button"
                       onClick={handleSubmit}
