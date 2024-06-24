@@ -26,7 +26,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className="absolute top-0 left-0 w-full h-10 flex justify-between menu">
+    <div className="absolute top-0 left-0 w-full h-10 flex justify-between navbar">
       <Link
         to={location.pathname === "/admin" ? "/" : "/home"}
         className="flex items-center pl-3 justify-center text-xl"
@@ -39,7 +39,7 @@ const Navbar = () => {
         </p>
         <Link to="/">
           <LogOut
-            className="mr-4 scale-150 hover:cursor-pointer ease-in duration-100 p-1 rounded-md menu-button"
+            className="mr-4 scale-150 hover:cursor-pointer ease-in duration-100 p-1 rounded-md navbar-button"
             onClick={logout}
           />
         </Link>

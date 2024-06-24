@@ -64,6 +64,21 @@ body {
   }
 }
 
+.navbar {
+  background-color: var(--MenuBackground);
+}
+
+.navbar-button {
+  background-color: var(--MenuBackground);
+  transition: background-color 0.3s ease-in, color 0.3 linear;
+  user-select: none;
+
+  &:hover {
+    background-color: var(--MenuButtonHover);
+    color: var(--darkAccent);
+  }
+}
+
 .menu-button-special {
   background-color: var(--MenuBackground);
   transition: background-color 0.3s ease-in, color 0.3 linear;
