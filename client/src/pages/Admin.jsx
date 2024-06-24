@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { Eye, EyeOff } from "react-feather";
 import { Link, useNavigate } from "react-router-dom";
 import { Navbar, Header } from "../components";
@@ -6,6 +6,8 @@ import { Trash2 } from "react-feather";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { AuthContext } from "../context/authContext";
+
+// TODO: Add pagination for user container
 
 const Admin = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -18,6 +20,8 @@ const Admin = () => {
   const [error, setError] = useState(null);
   const { currentDomain } = useContext(AuthContext);
 
+  const formRef = useRef();
+
   const pageTitle = "Game center";
 
   const handleChange = (e) => {
@@ -28,6 +32,7 @@ const Admin = () => {
     e.preventDefault();
     if (inputs.username === "admin" && inputs.password === "test") {
       setLoggedIn(true);
+      getUsers();
       return;
     } else {
       setError("Invalid username or password");
@@ -47,10 +52,6 @@ const Admin = () => {
     }
   };
 
-  useEffect(() => {
-    getUsers();
-  }, []);
-
   const handleDeleteUser = async (userId) => {
     try {
       const res = await axios.delete(
@@ -69,6 +70,19 @@ const Admin = () => {
     setUserNameToDelete(null);
     setShowDeleteConfirmation(false);
   };
+
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        formRef.current.submit();
+      }
+      window.addEventListener("keypress", handleKeyPress);
+    };
+    return () => {
+      window.removeEventListener("keypress", handleKeyPress);
+    };
+  }, [handleSubmit]);
 
   const login = (
     <div className="w-full h-[100vh]">
@@ -98,7 +112,12 @@ const Admin = () => {
                 </p>
               </span>
               <div className="flex flex-row items-center pr-6 relative">
-                <form className="flex flex-col px-2 py-1 md:flex-row">
+                <form
+                  ref={formRef}
+                  onSubmit={handleSubmit}
+                  className="flex flex-col px-2 py-1 md:flex-row"
+                >
+                  <button type="submit" />
                   <input
                     type="text"
                     name="username"
