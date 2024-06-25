@@ -80,7 +80,7 @@ const colors = [
 // const paths = [lightning, hand, plane, heart, note, star, lightning];
 const paths = [two, zero, four, eight, hashtag, cross, two];
 
-export default function LoadingSpinner({ handleClick, handleAbort }) {
+export default function LoadingSpinner({ onClick }) {
   const greyBlueBase = "#a6b5d0";
   const greyBlueMain = alpha(greyBlueBase, 0.7);
 
@@ -100,8 +100,7 @@ export default function LoadingSpinner({ handleClick, handleAbort }) {
       </Stack>
       <button
         className="mt-3 px-1 rounded-md border-2 border-auto menu-button text-sm"
-        onClick={handleClick}
-        onAbort={handleAbort}
+        onClick={onClick}
       >
         Cancel
       </button>
