@@ -13,12 +13,19 @@ const Login = () => {
 
   const navigate = useNavigate();
   const formRef = useRef();
+  const controller = new AbortController();
+  const abortSignal = controller.signal;
 
   const { login, currentUser, setCurrentUser, adminLogin, guestLogin } =
     useContext(AuthContext);
 
   const handleChange = (e) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleCancel = (e) => {
+    controller.abort();
+    setLoading(false);
   };
 
   const handleSubmit = async (e) => {
@@ -31,7 +38,7 @@ const Login = () => {
     try {
       setLoading(true);
       console.log("Attempting to login");
-      await login(inputs);
+      await login(inputs, { abortSignal });
       console.log("Login complete");
       setLoading(false);
       navigate("/home");
@@ -138,7 +145,11 @@ const Login = () => {
           </section>
         </div>
       </div>
-      {loading ? <LoadingSpinner className="absolute" /> : ""}
+      {loading ? (
+        <LoadingSpinner className="absolute" onClick={handleCancel} />
+      ) : (
+        ""
+      )}
     </>
   );
 };
