@@ -80,29 +80,7 @@ const colors = [
 // const paths = [lightning, hand, plane, heart, note, star, lightning];
 const paths = [two, zero, four, eight, hashtag, cross, two];
 
-export default function LoadingSpinner() {
-  // const [pathIndex, setPathIndex] = useState(0);
-  // const progress = useMotionValue(pathIndex);
-  // const fill = useTransform(progress, paths.map(getIndex), colors);
-  // const path = useFlubber(progress, paths);
-
-  // useEffect(() => {
-  //   const animation = animate(progress, pathIndex, {
-  //     duration: 0.8,
-  //     ease: "easeInOut",
-  //     onComplete: () => {
-  //       if (pathIndex === paths.length - 1) {
-  //         progress.set(0);
-  //         setPathIndex(1);
-  //       } else {
-  //         setPathIndex(pathIndex + 1);
-  //       }
-  //     },
-  //   });
-
-  //   return () => animation.stop();
-  // }, [pathIndex]);
-
+export default function LoadingSpinner({ handleClick, handleAbort }) {
   const greyBlueBase = "#a6b5d0";
   const greyBlueMain = alpha(greyBlueBase, 0.7);
 
@@ -115,49 +93,18 @@ export default function LoadingSpinner() {
         alignItems: "center",
         justifyContent: "center",
       }}
-      className="bg-slate-700 bg-opacity-50"
+      className="flex-col bg-slate-700 bg-opacity-50"
     >
       <Stack sx={{ color: greyBlueBase }} spacing={2} direction="row">
         <CircularProgress color="inherit" size={50} />
       </Stack>
-
-      {/* <svg width="400" height="400">
-        <g transform="translate(10 10) scale(17 17)">
-          <motion.path fill={fill} d={path} />
-        </g>
-      </svg> */}
-      {/* <motion.div
-        style={LoadingContainer}
-        variants={ContainerVariants}
-        initial="initial"
-        animate="animate"
+      <button
+        className="mt-3 px-1 rounded-md border-2 border-auto menu-button text-sm"
+        onClick={handleClick}
+        onAbort={handleAbort}
       >
-        <motion.span
-          style={LoadingDot}
-          variants={DotVariants}
-          transition={DotTransition}
-        />
-        <motion.span
-          style={LoadingDot}
-          variants={DotVariants}
-          transition={DotTransition}
-        />
-        <motion.span
-          style={LoadingDot}
-          variants={DotVariants}
-          transition={DotTransition}
-        />
-        <motion.span
-          style={LoadingDot}
-          variants={DotVariants}
-          transition={DotTransition}
-        />
-        <motion.span
-          style={LoadingDot}
-          variants={DotVariants}
-          transition={DotTransition}
-        />
-      </motion.div> */}
+        Cancel
+      </button>
     </div>
   );
 }
