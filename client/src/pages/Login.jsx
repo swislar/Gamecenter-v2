@@ -87,7 +87,7 @@ const Login = () => {
                     </p>
                     <motion.p
                       whileTap={{ scale: 0.85 }}
-                      className="relative m-2 border-2 border-zinc-900 px-1 rounded-lg  menu-button"
+                      className="relative m-2 border-2 border-zinc-900 px-1 rounded-lg menu-button"
                     >
                       <Link onClick={handleSubmit}>Next</Link>
                     </motion.p>
@@ -146,7 +146,7 @@ const Login = () => {
         </div>
       </div>
       {loading ? (
-        <LoadingSpinner className="absolute" onClick={handleCancel} />
+        <LoadingSpinner className="absolute z-10" onClick={handleCancel} />
       ) : (
         ""
       )}

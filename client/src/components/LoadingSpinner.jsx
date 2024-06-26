@@ -95,15 +95,22 @@ export default function LoadingSpinner({ onClick }) {
       }}
       className="flex-col bg-slate-700 bg-opacity-50"
     >
-      <Stack sx={{ color: greyBlueBase }} spacing={2} direction="row">
-        <CircularProgress color="inherit" size={50} />
-      </Stack>
-      <button
-        className="mt-3 px-1 rounded-md border-2 border-auto menu-button text-sm"
-        onClick={onClick}
+      <Stack
+        sx={{ color: greyBlueBase }}
+        spacing={2}
+        direction="column"
+        alignItems={"center"}
       >
-        Cancel
-      </button>
+        <CircularProgress color="inherit" size={50} />
+        {onClick && (
+          <button
+            className="z-10 mt-3 px-1 rounded-md border-2 border-auto menu-button text-sm text-slate-200"
+            onClick={onClick}
+          >
+            Cancel
+          </button>
+        )}
+      </Stack>
     </div>
   );
 }
