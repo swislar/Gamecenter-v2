@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { motion, useMotionValue, useTransform, animate } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Stack, CircularProgress } from "@mui/material";
-import { alpha } from "@mui/material/styles";
+import { alpha, duration } from "@mui/material/styles";
 import { getIndex, useFlubber } from "../use-flubber.ts";
 import {
   star,
@@ -77,6 +77,27 @@ const colors = [
   "#00cc88",
 ];
 
+const dotContainer = {
+  initial: {
+    opacity: 0,
+    transition: {
+      staggerChildren: 0.3,
+    },
+  },
+  animate: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.3,
+      repeatDelay: 2,
+    },
+  },
+};
+
+const dotChildren = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+};
+
 // const paths = [lightning, hand, plane, heart, note, star, lightning];
 const paths = [two, zero, four, eight, hashtag, cross, two];
 
@@ -102,9 +123,71 @@ export default function LoadingSpinner({ onClick }) {
         alignItems={"center"}
       >
         <CircularProgress color="inherit" size={50} />
+        <div className="flex flex-col items-center text-xs">
+          <motion.p>
+            Loading{" "}
+            <motion.span
+              variants={dotContainer}
+              initial="initial"
+              animate="animate"
+              exit="initial"
+              key="loading-dots"
+            >
+              {Array.from({ length: 3 }, (_, index) => {
+                return (
+                  <motion.span
+                    variants={dotChildren}
+                    transition={{
+                      duration: 1,
+                      repeatType: "mirror",
+                      repeat: Infinity,
+                    }}
+                    style={{ display: "inline-block", width: "0.5em" }}
+                    key={index}
+                    className="text-xl"
+                  >
+                    .
+                  </motion.span>
+                );
+              })}
+            </motion.span>
+          </motion.p>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            Connecting to server{" "}
+            <motion.span
+              variants={dotContainer}
+              initial="initial"
+              animate="animate"
+              exit="initial"
+              key="loading-dots"
+            >
+              {Array.from({ length: 3 }, (_, index) => {
+                return (
+                  <motion.span
+                    variants={dotChildren}
+                    transition={{
+                      duration: 1,
+                      repeatType: "mirror",
+                      repeat: Infinity,
+                    }}
+                    style={{ display: "inline-block", width: "0.5em" }}
+                    key={index}
+                    className="text-xl"
+                  >
+                    .
+                  </motion.span>
+                );
+              })}
+            </motion.span>
+          </motion.p>
+        </div>
         {onClick && (
           <button
-            className="z-10 mt-3 px-1 rounded-md border-2 border-auto menu-button text-sm text-slate-200"
+            className="z-10 px-1 rounded-md border-2 border-auto menu-button text-sm text-slate-200"
             onClick={onClick}
           >
             Cancel
