@@ -1,6 +1,15 @@
 import "./App.css";
-import { Games } from "./components/index";
-import { Login, Register, Main, Home, TTT, TZFE, Admin } from "./pages/index";
+import {
+  Login,
+  Register,
+  Main,
+  Home,
+  TTT,
+  TZFE,
+  Admin,
+  About,
+  Statistics,
+} from "./pages/index";
 import React, { Suspense, useEffect, useState } from "react";
 import {
   createBrowserRouter,
@@ -9,6 +18,7 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
+import { LoadingSpinner } from "./components";
 
 const fixedLayout = () => {
   return <div>I am a testing fixed Layout</div>;
@@ -65,12 +75,24 @@ const testingRouter = createBrowserRouter([
     element: <Home />,
   },
   {
+    path: "/about",
+    element: <About />,
+  },
+  {
+    path: "/statistics",
+    element: <Statistics />,
+  },
+  {
     path: "/ttt",
     element: <TTT />,
   },
   {
     path: "/tzfe",
     element: <TZFE />,
+  },
+  {
+    path: "/load",
+    element: <LoadingSpinner />,
   },
 ]);
 
