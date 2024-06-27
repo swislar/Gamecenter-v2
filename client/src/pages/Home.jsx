@@ -1,12 +1,5 @@
-import React, {
-  useState,
-  useEffect,
-  useId,
-  useContext,
-  useLayoutEffect,
-} from "react";
+import React, { useState, useEffect, useContext, useLayoutEffect } from "react";
 import { Navbar, HomeGameCard } from "../components/index";
-import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import TTT_logo from "../images/TTT_logo.png";
 import TZFE_logo from "../images/TZFE_logo.png";
@@ -18,8 +11,6 @@ const Home = () => {
   const [showPrivacyScreen, setShowPrivacyScreen] = useState(false);
   const [screenSize, setScreenSize] = useState(window.innerWidth < 768 ? 0 : 1); //0 for mobile, 1 for desktop
   const { darkMode } = useContext(AuthContext);
-
-  const tempId = useId();
 
   useEffect(() => {
     setShowPrivacyScreen(true);
@@ -131,8 +122,8 @@ const Home = () => {
       </AnimatePresence>
       {!showPrivacyScreen && (
         <div className="w-full absolute top-0">
-          <Navbar />
-          <section className="w-full relative top-12">
+          <Navbar pageName={"Home"} />
+          <section className="w-full relative top-16">
             <motion.div
               variants={cardContainer}
               initial={"hidden"}
