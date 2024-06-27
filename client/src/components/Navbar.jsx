@@ -72,21 +72,41 @@ const Navbar = ({ pageName = "" }) => {
       <section className="h-7 w-full flex flex-row justify-evenly items-center">
         <Link
           to="/home"
-          className={`menu-button w-[50%] text-center border-2 ease-in-out duration-300 hover:cursor-pointer ${
+          className={`menu-button w-1/3 text-center border-2 ease-in-out duration-300 hover:cursor-pointer ${
             pageName === "Home"
               ? "border-cyan-300 border-4"
-              : pageName === ""
-              ? "border-cyan-200"
+              : pageName === "Statistics"
+              ? "border-cyan-200 border-r-0"
+              : pageName === "About"
+              ? "border-cyan-200 border-r-0"
               : "border-cyan-200 border-r-0"
           }`}
         >
           Home
         </Link>
         <Link
+          to="/statistics"
+          className={`menu-button w-1/3 text-center border-2 ease-in-out duration-300 hover:cursor-pointer ${
+            pageName === "Statistics"
+              ? "border-cyan-300 border-4"
+              : pageName === "Home"
+              ? "border-cyan-200 border-l-0 border-r-0"
+              : pageName === "About"
+              ? "border-cyan-200 border-r-0"
+              : "border-cyan-200"
+          }`}
+        >
+          Statistics
+        </Link>
+        <Link
           to="/about"
-          className={`menu-button w-[50%] text-center border-2 ease-in-out duration-300 hover:cursor-pointer ${
+          className={`menu-button w-1/3 text-center border-2 ease-in-out duration-300 hover:cursor-pointer ${
             pageName === "About"
               ? "border-cyan-300 border-4"
+              : pageName === "Home"
+              ? "border-cyan-200"
+              : pageName === "Statistics"
+              ? "border-cyan-200 border-l-0"
               : "border-cyan-200 border-l-0"
           }`}
         >
