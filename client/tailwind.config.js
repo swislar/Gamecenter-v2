@@ -22,8 +22,10 @@ module.exports = {
         "raw-purple": "#603F8B",
         "gunmetal-gray": "#616C59",
         "grey-blue": "#667fae",
+        sakura: "#9a8c98",
         "sakura-hover": "#c9ada7",
         "sakura-hover-text": "#22223b",
+        "navy-purple": "#4a4e69",
       },
       translate: {
         55: "220px",
