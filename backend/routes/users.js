@@ -7,6 +7,7 @@ import {
   createTTTScores,
   deleteUser,
   getUsers,
+  getUserStatistics,
 } from "../controllers/users.js";
 
 const router = express.Router();
@@ -14,6 +15,8 @@ const router = express.Router();
 router.get("/test", (req, res) => {
   res.json("testing authentication!");
 });
+
+router.get("/user-statistics/:uid", getUserStatistics);
 
 router.get("/user-data", getUsers);
 
