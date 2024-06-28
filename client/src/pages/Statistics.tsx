@@ -10,6 +10,7 @@ import { Navbar, LoadingSpinner } from "../components/index";
 import { AuthContext } from "../context/authContext";
 import { Search } from "react-feather";
 import axios from "axios";
+import { motion } from "framer-motion";
 
 interface User {
   username: string;
@@ -100,7 +101,7 @@ const Statistics = () => {
       {loading && <LoadingSpinner />}
       {!loading && (
         <section className="absolute top-18 w-full flex flex-col md:flex-row items-center justify-center pt-7">
-          <div className="flex flex-col text-sm bg-navy-purple border-cyan-200 border-2 rounded-sm sm:absolute top-7 left-5">
+          <motion.div className="flex flex-col text-sm bg-navy-purple border-cyan-200 border-2 rounded-sm sm:absolute top-7 left-5">
             <h1 className="font-mono flex flex-row text-slate-100 px-1 items-center justify-center">
               Search for users <Search className="scale-90 pl-1" />
             </h1>
@@ -114,7 +115,9 @@ const Statistics = () => {
             />
             <ul className="bg-sakura h-52 overflow-y-scroll">
               {userData
-                .filter((user: User) => user.username.includes(userSearch))
+                .filter((user: User) =>
+                  user.username.toLowerCase().includes(userSearch.toLowerCase())
+                )
                 .map((user: User) => (
                   <li
                     key={user.uid}
@@ -125,7 +128,7 @@ const Statistics = () => {
                   </li>
                 ))}
             </ul>
-          </div>
+          </motion.div>
           <div
             className={`flex flex-col font-mono pt-3 sm:pt-0 ${
               darkMode ? "text-auto border-auto" : "text-neutral-950"
@@ -142,35 +145,37 @@ const Statistics = () => {
                 Data for {currentUser}
               </h1>
             )}
-            {currentUser === ""
-              ? ""
-              : userStatistics.length !== 0
-              ? userStatistics.map((gameStats: GameStatistics) => (
-                  <div>
-                    <h2
-                      className={`text-center bg-opacity-30 px-2 duration-500 ease-in-out ${
-                        darkMode ? "bg-cyan-200" : "bg-stone-800"
-                      }`}
-                    >
-                      {renderGameTitle(gameStats.game)} - {gameStats.category}x
-                      {gameStats.category}
-                    </h2>
-                    <p className="text-center ease-in-out duration-500">
-                      {gameStats.game === "tzfe"
-                        ? "High-score"
-                        : gameStats.game === "ttt"
-                        ? "Plays"
-                        : ""}
-                      {": "}
-                      {gameStats.game === "tzfe"
-                        ? gameStats.highscore
-                        : gameStats.game === "ttt"
-                        ? gameStats.plays
-                        : ""}
-                    </p>
-                  </div>
-                ))
-              : "No data found!"}
+            {currentUser === "" ? (
+              ""
+            ) : userStatistics.length !== 0 ? (
+              userStatistics.map((gameStats: GameStatistics) => (
+                <div>
+                  <h2
+                    className={`text-center bg-opacity-30 px-2 duration-500 ease-in-out ${
+                      darkMode ? "bg-cyan-200" : "bg-stone-800"
+                    }`}
+                  >
+                    {renderGameTitle(gameStats.game)} - {gameStats.category}x
+                    {gameStats.category}
+                  </h2>
+                  <p className="text-center ease-in-out duration-500">
+                    {gameStats.game === "tzfe"
+                      ? "High-score"
+                      : gameStats.game === "ttt"
+                      ? "Plays"
+                      : ""}
+                    {": "}
+                    {gameStats.game === "tzfe"
+                      ? gameStats.highscore
+                      : gameStats.game === "ttt"
+                      ? gameStats.plays
+                      : ""}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p className="text-center">No data found!</p>
+            )}
           </div>
         </section>
       )}
