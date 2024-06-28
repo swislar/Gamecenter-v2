@@ -101,7 +101,7 @@ const dotChildren = {
 // const paths = [lightning, hand, plane, heart, note, star, lightning];
 const paths = [two, zero, four, eight, hashtag, cross, two];
 
-export default function LoadingSpinner({ onClick }) {
+export default function LoadingSpinner({ onClick = "" }) {
   const greyBlueBase = "#a6b5d0";
   const greyBlueMain = alpha(greyBlueBase, 0.7);
 
