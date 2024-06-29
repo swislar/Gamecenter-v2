@@ -20,7 +20,7 @@ export const getUserHistory = (req, res) => {
   const userId = req.params.uid;
 
   const query =
-    "SELECT game, category, score, date FROM scoreboard WHERE uid = ?";
+    "SELECT game, category, score, date FROM scoreboard WHERE uid = ? ORDER BY date DESC";
 
   db.query(query, [userId], (err, data) => {
     if (err) {
