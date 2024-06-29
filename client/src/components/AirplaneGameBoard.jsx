@@ -121,10 +121,10 @@ const AirplaneGameBoard = (Props) => {
 
   return (
     //set the tiles to display the players on the current tile here
-    <div className="p-4">
+    <div className="mt-16 p-4">
       <section className="flex flex-col items-center justify-center">
         <span className="flex flex-row py-2 items-center justify-center">
-          Airplane
+          {" "}
         </span>
         <span>
           {board.map((col, indexCol) => {
