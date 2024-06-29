@@ -16,6 +16,22 @@ export const getUserStatistics = (req, res) => {
   });
 };
 
+export const getUserHistory = (req, res) => {
+  const userId = req.params.uid;
+
+  const query =
+    "SELECT game, category, score, date FROM scoreboard WHERE uid = ?";
+
+  db.query(query, [userId], (err, data) => {
+    if (err) {
+      return res.json(err);
+    } else if (data.length === 0) {
+      return res.status(400).json("No data found!");
+    }
+    return res.status(200).json(data);
+  });
+};
+
 export const getUsers = (req, res) => {
   const query = "SELECT * FROM user";
 

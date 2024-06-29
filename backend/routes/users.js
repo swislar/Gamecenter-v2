@@ -8,6 +8,7 @@ import {
   deleteUser,
   getUsers,
   getUserStatistics,
+  getUserHistory,
 } from "../controllers/users.js";
 
 const router = express.Router();
@@ -17,6 +18,8 @@ router.get("/test", (req, res) => {
 });
 
 router.get("/user-statistics/:uid", getUserStatistics);
+
+router.get("/user-history/:uid", getUserHistory);
 
 router.get("/user-data", getUsers);
 
