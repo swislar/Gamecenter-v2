@@ -121,6 +121,7 @@ export default function LoadingSpinner({ onClick = "" }) {
         spacing={2}
         direction="column"
         alignItems={"center"}
+        className="z-10 bg-sky-900 bg-opacity-90 px-1 py-2 rounded-lg"
       >
         <CircularProgress color="inherit" size={50} />
         <div className="flex flex-col items-center text-xs">
@@ -187,7 +188,7 @@ export default function LoadingSpinner({ onClick = "" }) {
         </div>
         {onClick && (
           <button
-            className="z-10 px-1 rounded-md border-2 border-auto menu-button text-sm text-slate-200"
+            className="px-1 rounded-md border-2 border-auto menu-button text-sm text-slate-200"
             onClick={onClick}
           >
             Cancel
