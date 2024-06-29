@@ -81,32 +81,32 @@ const About = () => {
           variants={containerVariantFirst}
           initial="initial"
           animate="animate"
-          className="flex flex-row w-full items-center justify-evenly"
+          className="flex flex-row w-full items-center justify-evenly pt-5 pb-2"
         >
           <motion.p
             drag
-            dragConstraints={{ top: 3, bottom: 500, right: 290, left: 0 }}
+            dragConstraints={{ top: 0, bottom: 0, right: 0, left: 0 }}
             variants={childVariant}
           >
             MySQL
           </motion.p>
           <motion.p
             drag
-            dragConstraints={{ top: 3, bottom: 500, right: 185, left: -80 }}
+            dragConstraints={{ top: 0, bottom: 0, right: 0, left: 0 }}
             variants={childVariant}
           >
             ExpressJS
           </motion.p>
           <motion.p
             drag
-            dragConstraints={{ top: 3, bottom: 500, right: 96, left: -185 }}
+            dragConstraints={{ top: 0, bottom: 0, right: 0, left: 0 }}
             variants={childVariant}
           >
             ReactJS
           </motion.p>
           <motion.p
             drag
-            dragConstraints={{ top: 3, bottom: 500, right: 0, left: -277 }}
+            dragConstraints={{ top: 0, bottom: 0, right: 0, left: 0 }}
             variants={childVariant}
           >
             NodeJS
@@ -120,7 +120,7 @@ const About = () => {
         >
           <motion.p
             drag
-            dragConstraints={{ top: 3, bottom: 500, right: 250, left: 0 }}
+            dragConstraints={{ top: 0, bottom: 0, right: 0, left: 0 }}
             variants={childVariant}
             className=""
           >
@@ -128,21 +128,21 @@ const About = () => {
           </motion.p>
           <motion.p
             drag
-            dragConstraints={{ top: 3, bottom: 500, right: 135, left: -133 }}
+            dragConstraints={{ top: 0, bottom: 0, right: 0, left: 0 }}
             variants={childVariant}
           >
             React Router
           </motion.p>
           <motion.p
             drag
-            dragConstraints={{ top: 3, bottom: 500, right: 70, left: -250 }}
+            dragConstraints={{ top: 0, bottom: 0, right: 0, left: 0 }}
             variants={childVariant}
           >
             Vercel
           </motion.p>
           <motion.p
             drag
-            dragConstraints={{ top: 3, bottom: 500, right: 0, left: -310 }}
+            dragConstraints={{ top: 0, bottom: 0, right: 0, left: 0 }}
             variants={childVariant}
           >
             Render
