@@ -52,7 +52,7 @@ const Home = () => {
       <HomeGameCard
         cardName="Aero-Chess"
         cardLogo={Aeroplane_logo}
-        cardLink="/home"
+        cardLink="/aerochess"
         BGFrom="from-grey-blue"
         BGTo="to-sky-400"
       />,

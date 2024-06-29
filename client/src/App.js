@@ -6,6 +6,7 @@ import {
   Home,
   TTT,
   TZFE,
+  AeroChess,
   Admin,
   About,
   Statistics,
@@ -89,6 +90,10 @@ const testingRouter = createBrowserRouter([
   {
     path: "/tzfe",
     element: <TZFE />,
+  },
+  {
+    path: "/aerochess",
+    element: <AeroChess />,
   },
   {
     path: "/load",

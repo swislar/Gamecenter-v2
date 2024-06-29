@@ -7,3 +7,4 @@ export { default as Statistics } from "./Statistics.tsx";
 export { default as Main } from "./Main";
 export { default as TTT } from "./TTT";
 export { default as TZFE } from "./TZFE";
+export { default as AeroChess } from "./AeroChess.tsx";
