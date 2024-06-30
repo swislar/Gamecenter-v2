@@ -70,7 +70,6 @@ const Statistics = () => {
         `${currentDomain}/api/users/user-statistics/${userId}`
       );
       setUserStatistics(res.data);
-      console.log(res.data);
     } catch (err) {
       setUserStatistics([]);
       console.log(err);
@@ -232,11 +231,16 @@ const Statistics = () => {
                 ""
               ) : (
                 <div>
-                  <span className="flex flex-row items-center justify-evenly">
-                    <p>Game</p>
-                    <p>Score</p>
-                    <p>Date</p>
-                  </span>
+                  {userHistory.length !== 0 ? (
+                    <span className="flex flex-row items-center justify-evenly">
+                      <p>Game</p>
+                      <p>Score</p>
+                      <p>Date</p>
+                    </span>
+                  ) : (
+                    ""
+                  )}
+
                   <motion.span
                     variants={historyVariant}
                     initial="initial"
