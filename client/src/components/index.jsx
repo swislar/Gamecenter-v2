@@ -9,3 +9,5 @@ export { default as Navbar } from "./Navbar";
 export { default as LoadingSpinner } from "./LoadingSpinner";
 export { Header } from "./Header.tsx";
 export { HomeGameCard } from "./HomeGameCard.tsx";
+export { TZFETile } from "./TZFETile.tsx";
+export { HomeDinoTile } from "./HomeDinoTile.tsx";

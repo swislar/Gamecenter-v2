@@ -19,42 +19,41 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
-import { LoadingSpinner } from "./components";
 
 const fixedLayout = () => {
   return <div>I am a testing fixed Layout</div>;
 };
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <div>This is the router testing page.</div>,
-  },
-  {
-    path: "/page2",
-    element: <div>This works just like djano but in jsx!</div>,
-  },
-  // {
-  //   path: "/testingFixedLayout/:id",
-  //   element: <fixedLayout />,
-  //   children: [
-  //     {
-  //       path: "/test1",
-  //       element: <div>Testing 1</div>,
-  //     },
-  //     {
-  //       path: "/test2",
-  //       element: <div>Testing 2</div>,
-  //     },
-  //     {
-  //       path: "/test3",
-  //       element: <div>Testing 3</div>,
-  //     },
-  //   ],
-  // },
-]);
+// const router = createBrowserRouter([
+//   {
+//     path: "/",
+//     element: <div>This is the router testing page.</div>,
+//   },
+//   {
+//     path: "/page2",
+//     element: <div>This works just like djano but in jsx!</div>,
+//   },
+//   {
+//     path: "/testingFixedLayout/:id",
+//     element: <fixedLayout />,
+//     children: [
+//       {
+//         path: "/test1",
+//         element: <div>Testing 1</div>,
+//       },
+//       {
+//         path: "/test2",
+//         element: <div>Testing 2</div>,
+//       },
+//       {
+//         path: "/test3",
+//         element: <div>Testing 3</div>,
+//       },
+//     ],
+//   },
+// ]);
 
-const testingRouter = createBrowserRouter([
+const router = createBrowserRouter([
   {
     path: "/",
     element: <Main />,
@@ -95,17 +94,13 @@ const testingRouter = createBrowserRouter([
     path: "/aerochess",
     element: <AeroChess />,
   },
-  {
-    path: "/load",
-    element: <LoadingSpinner />,
-  },
 ]);
 
 function App() {
   return (
     <div className="App">
-      <div className="h-screen w-screen overflow-hidden overscroll-none">
-        <RouterProvider router={testingRouter} />
+      <div className="h-screen w-screen overscroll-none">
+        <RouterProvider router={router} />
       </div>
     </div>
   );
