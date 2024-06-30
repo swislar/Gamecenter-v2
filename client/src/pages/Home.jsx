@@ -1,5 +1,16 @@
-import React, { useState, useEffect, useContext, useLayoutEffect } from "react";
-import { Navbar, HomeGameCard } from "../components/index";
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useLayoutEffect,
+  useRef,
+} from "react";
+import {
+  Navbar,
+  HomeGameCard,
+  TZFETile,
+  HomeDinoTile,
+} from "../components/index";
 import { motion, AnimatePresence } from "framer-motion";
 import TTT_logo from "../images/TTT_logo.png";
 import TZFE_logo from "../images/TZFE_logo.png";
@@ -123,11 +134,12 @@ const Home = () => {
       {!showPrivacyScreen && (
         <div className="w-full absolute top-0">
           <Navbar pageName={"Home"} />
-          <section className="w-full relative top-16">
+          <section className="w-full relative top-16 h-[100vh]">
             <motion.div
               variants={cardContainer}
               initial={"hidden"}
-              whileInView={"show"}
+              animate={"show"}
+              // whileInView={"show"}
               className={`relative grid gap-12 justify-center pt-5`}
             >
               {cards.map((card, id) => {
@@ -147,6 +159,7 @@ const Home = () => {
               })}
             </motion.div>
           </section>
+          <HomeDinoTile />
         </div>
       )}
     </>
