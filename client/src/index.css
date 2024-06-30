@@ -144,6 +144,14 @@ body {
   width: 100vw;
 }
 
+.flip-vertical {
+  --transform-scale-y: -1;
+}
+
+.flip-horizontal {
+  --transform-scale-x: -1;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
