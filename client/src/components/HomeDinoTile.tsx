@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useLayoutEffect, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/all";
 import { TZFETile } from "./index";
@@ -10,6 +10,21 @@ gsap.registerPlugin(ScrollTrigger);
 
 export const HomeDinoTile = () => {
   const { darkMode } = useContext(AuthContext);
+  const [screenSize, setScreenSize] = useState(window.innerWidth < 768 ? 0 : 1); //0 for mobile, 1 for desktop
+
+  useLayoutEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setScreenSize(0);
+      } else {
+        setScreenSize(1);
+      }
+    };
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [screenSize]);
 
   const timeline1 = gsap.timeline({
     defaults: { ease: "none" },
@@ -44,6 +59,7 @@ export const HomeDinoTile = () => {
       },
     });
     timeline1.from("#Tile2", { opacity: 0, yPercent: 100, duration: 1 });
+    timeline1.set("#Dinosaur1", { visibility: "visible" });
     timeline1.fromTo(
       "#Dinosaur1",
       { opacity: 0, y: -150, x: -150 },
@@ -133,8 +149,12 @@ export const HomeDinoTile = () => {
         pin: ".container2",
         pinSpacing: false,
       },
+      onUpdate: (self) => {
+        //
+      },
     });
     timeline2.from("#Tile2048", { opacity: 0, yPercent: 100, duration: 1 });
+    timeline2.set("#Dinosaur2", { visibility: "visible" });
     timeline2.fromTo(
       "#Dinosaur2",
       { opacity: 0, y: -200, x: jumpX * 12 },
@@ -205,9 +225,16 @@ export const HomeDinoTile = () => {
   return (
     <div className="flex flex-col items-center h-[220vh] ">
       {/* <section className="w-full h-[40vh]"></section> */}
-      <section className="container1 mb-[80vh] w-full flex flex-row justify-evenly">
-        <div className="absolute left-0 top-[50%]">
-          <Dinosaur width={100} height={100} id="Dinosaur1" />
+      <section
+        className={`container1 mb-[80vh] w-full flex flex-row justify-evenly sm:mt-[20vh]`}
+      >
+        <div className={`absolute left-0 top-[50%]`}>
+          <Dinosaur
+            width={100}
+            height={100}
+            id="Dinosaur1"
+            className="invisible"
+          />
         </div>
         <TZFETile number={2} id="Tile2" />
         <TZFETile number={4} id="Tile4" />
@@ -216,8 +243,14 @@ export const HomeDinoTile = () => {
         <TZFETile number={32} id="Tile32" />
       </section>
       <section className="container2 mb-28 w-full flex flex-row justify-evenly">
-        <div className="absolute left-0 top-[50%]">
-          <Dinosaur width={100} height={100} id="Dinosaur2" reflectX={true} />
+        <div className={`absolute left-0 top-[50%]`}>
+          <Dinosaur
+            width={100}
+            height={100}
+            id="Dinosaur2"
+            reflectX={true}
+            className="invisible"
+          />
         </div>
         <TZFETile number={64} id="Tile64" />
         <TZFETile number={128} id="Tile128" />
