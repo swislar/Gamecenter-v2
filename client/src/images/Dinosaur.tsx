@@ -1,3 +1,4 @@
+import { transform } from "framer-motion";
 import React from "react";
 
 interface DinosaurProps {
@@ -7,6 +8,7 @@ interface DinosaurProps {
   id?: string;
   className?: string;
   reflectX?: boolean;
+  style?: React.CSSProperties;
 }
 
 export const Dinosaur: React.FC<DinosaurProps> = ({
@@ -16,6 +18,7 @@ export const Dinosaur: React.FC<DinosaurProps> = ({
   id = "",
   className = "",
   reflectX = false,
+  style = {},
 }) => {
   return (
     <svg
@@ -26,9 +29,7 @@ export const Dinosaur: React.FC<DinosaurProps> = ({
       width={width}
       id={id}
       className={className}
-      style={
-        !reflectX ? { transform: "scaleX(1)" } : { transform: "scaleX(-1)" }
-      }
+      style={{ ...style, transform: reflectX ? "scaleX(-1)" : "scaleX(1)" }}
     >
       <g fill="none" fill-rule="evenodd">
         <path
