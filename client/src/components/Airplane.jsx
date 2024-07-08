@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { AirplaneGameBoard } from "./index";
+import { AirplaneBoard } from "../class/AirplaneBoard.tsx";
 
 const Airplane = () => {
   const [showMenu, setShowMenu] = useState(true);
@@ -38,7 +39,14 @@ const Airplane = () => {
 
   return (
     <div className="flex flex-col justify-center items-center">
-      {showMenu ? menu : <AirplaneGameBoard players={numberPlayers} />}
+      {showMenu ? (
+        menu
+      ) : (
+        <AirplaneGameBoard
+          players={numberPlayers}
+          airplaneBoard={new AirplaneBoard(numberPlayers)}
+        />
+      )}
     </div>
   );
 };

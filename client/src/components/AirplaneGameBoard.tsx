@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../context/authContext";
+import { AirplaneBoard } from "../class/AirplaneBoard.tsx";
 
-// TODO: Check for overlap in board pieces
-// TODO: Check for winner
-// TODO: Turn in into the center tile
 const createBoard = (Players: number) => {
   const newBoard: number[][] = [];
   for (let i = 0; i < 15; i++) {
@@ -13,44 +11,49 @@ const createBoard = (Players: number) => {
   if (Players >= 2) {
     //set the bottom right and left corners of the board to contain the players
     //for the first player
-    newBoard[13][1] = 1;
-    newBoard[13][0] = 1;
-    newBoard[14][1] = 1;
-    newBoard[14][0] = 1;
+    newBoard[13][0] = 10;
+    newBoard[13][1] = 11;
+    newBoard[14][0] = 12;
+    newBoard[14][1] = 13;
     //for the 2nd player
-    newBoard[13][13] = 2;
-    newBoard[13][14] = 2;
-    newBoard[14][13] = 2;
-    newBoard[14][14] = 2;
+    newBoard[13][13] = 20;
+    newBoard[13][14] = 21;
+    newBoard[14][13] = 22;
+    newBoard[14][14] = 23;
   }
   if (Players >= 3) {
     //set the bottom right, left and top right corners of the board to contain the players
-    newBoard[1][13] = 3;
-    newBoard[1][14] = 3;
-    newBoard[0][13] = 3;
-    newBoard[0][14] = 3;
+    newBoard[0][13] = 30;
+    newBoard[0][14] = 31;
+    newBoard[1][13] = 32;
+    newBoard[1][14] = 33;
   }
   if (Players >= 4) {
     //set all 4 corners of the board to contain the players
-    newBoard[0][0] = 4;
-    newBoard[0][1] = 4;
-    newBoard[1][0] = 4;
-    newBoard[1][1] = 4;
+    newBoard[0][0] = 40;
+    newBoard[0][1] = 41;
+    newBoard[1][0] = 42;
+    newBoard[1][1] = 43;
   }
   return newBoard;
 };
 
 interface AirplaneGameBoardProps {
   players: number;
+  airplaneBoard: AirplaneBoard;
 }
 
-const AirplaneGameBoard: React.FC<AirplaneGameBoardProps> = ({ players }) => {
+const AirplaneGameBoard: React.FC<AirplaneGameBoardProps> = ({
+  players,
+  airplaneBoard,
+}) => {
   const [turnPlayer, setTurnPlayer] = useState(1);
   const [gameOver, setGameOver] = useState(false);
   const [board, setBoard] = useState(createBoard(players));
   const [selectedPiece, setSelectedPiece] = useState([-1, -1]);
   const [diceRoll, setDiceRoll] = useState(0);
   const [errorMessage, setErrorMessage] = useState("");
+  const [pieceNumber, setPieceNumber] = useState(-1);
   const { darkMode } = useContext(AuthContext);
 
   const initialiseGameBoard = (row: number, col: number) => {
@@ -113,9 +116,13 @@ const AirplaneGameBoard: React.FC<AirplaneGameBoardProps> = ({ players }) => {
     }
   };
 
-  const isPlayerTile = (indexCol: number, indexRow: number) => {
-    const item = board[indexCol][indexRow];
-    return [1, 2, 3, 4].includes(item);
+  const playerTiles = (indexCol: number, indexRow: number): number[][] => {
+    const playerState = airplaneBoard.getBoardState();
+    const filteredPlayerState = playerState.filter(
+      (coordinates) =>
+        coordinates[0] === indexCol && coordinates[1] === indexRow
+    );
+    return filteredPlayerState;
   };
 
   const isCurrentPlayerTile = (
@@ -123,20 +130,39 @@ const AirplaneGameBoard: React.FC<AirplaneGameBoardProps> = ({ players }) => {
     indexRow: number,
     player: number
   ) => {
-    const item = board[indexCol][indexRow];
-    return item === player;
+    const currentState = airplaneBoard
+      .getBoardState()
+      .filter(
+        (coordinates) =>
+          coordinates[2] === player &&
+          coordinates[0] === indexCol &&
+          coordinates[1] === indexRow
+      );
+    return currentState.length > 0;
   };
 
-  const colourPlayerTile = (item: number) => {
-    if (item === 1) {
-      return "bg-purple-300 hover:animate-pulse";
-    } else if (item === 2) {
-      return "bg-pink-400 hover:animate-pulse";
-    } else if (item === 3) {
-      return "bg-orange-300 hover:animate-pulse";
-    } else if (item === 4) {
-      return "bg-red-200 hover:animate-pulse";
-    } else return "";
+  const colourPlayerTile = (indexCol: number, indexRow: number) => {
+    const playerTile = airplaneBoard
+      .getBoardState()
+      .filter(
+        (coordinates) =>
+          coordinates[0] === indexCol && coordinates[1] === indexRow
+      );
+    if (playerTile.length === 0) {
+      return "";
+    }
+    switch (playerTile[0][2]) {
+      case 1:
+        return "bg-purple-300";
+      case 2:
+        return "bg-pink-400";
+      case 3:
+        return "bg-orange-300";
+      case 4:
+        return "bg-red-200";
+      default:
+        return "";
+    }
   };
 
   const handleDiceRoll = (e: React.MouseEvent<HTMLElement>) => {
@@ -153,10 +179,11 @@ const AirplaneGameBoard: React.FC<AirplaneGameBoardProps> = ({ players }) => {
     row: number,
     col: number
   ) => {
-    if (turnPlayer === board[row][col]) {
+    if (turnPlayer === Math.floor(board[row][col] / 10)) {
       setSelectedPiece([row, col]);
+      setPieceNumber(board[row][col] % 10);
     }
-    console.log(board[row][col]);
+    console.log("Item: ", board[row][col]);
   };
 
   const startNextTurn = () => {
@@ -164,9 +191,13 @@ const AirplaneGameBoard: React.FC<AirplaneGameBoardProps> = ({ players }) => {
     setErrorMessage("");
     setDiceRoll(0);
     setSelectedPiece([-1, -1]);
+    setPieceNumber(-1);
   };
 
-  const moveSelectedPiece = (e: React.MouseEvent<HTMLSpanElement>) => {
+  const moveSelectedPiece = (
+    e: React.MouseEvent<HTMLSpanElement>,
+    pieceNumber: number
+  ) => {
     if (diceRoll === 0) {
       setErrorMessage("Roll dice first!");
       return;
@@ -175,291 +206,61 @@ const AirplaneGameBoard: React.FC<AirplaneGameBoardProps> = ({ players }) => {
       setErrorMessage("Select piece to move!");
       return;
     }
-    // if (board){
-    //   return;
-    // }
 
-    let selectedPieceVar = selectedPiece;
-    for (let i = 0; i < diceRoll; i++) {
-      console.log("iteration: ", i);
-      const currentRow = selectedPieceVar[0];
-      const currentCol = selectedPieceVar[1];
-      const newPosition = boardMovement[currentRow][currentCol];
-      const newRow = newPosition[0];
-      const newCol = newPosition[1];
-
-      setBoard((prevBoard) => {
-        const newBoard = [...prevBoard];
-        newBoard[newRow][newCol] = turnPlayer;
-        newBoard[currentRow][currentCol] = -1;
-        return newBoard;
-      });
-
-      console.log(board);
-      selectedPieceVar = newPosition;
-      // console.log(newPosition);
-    }
-    setSelectedPiece(selectedPieceVar);
+    const oldCoordinates = airplaneBoard.getCoordinates(
+      turnPlayer,
+      pieceNumber
+    );
+    console.log("Old coordinates: ", oldCoordinates);
+    const resetPosition = airplaneBoard.moveTile(
+      turnPlayer,
+      pieceNumber,
+      diceRoll
+    );
+    const newCoordinates = airplaneBoard.getCoordinates(
+      turnPlayer,
+      pieceNumber
+    );
+    console.log("New coordinates: ", newCoordinates);
+    setBoard((prevBoard) => {
+      const newBoard = [...prevBoard];
+      newBoard[oldCoordinates[0]][oldCoordinates[1]] = -1;
+      newBoard[newCoordinates[0]][newCoordinates[1]] = parseInt(
+        turnPlayer.toString().concat(pieceNumber.toString())
+      );
+      return newBoard;
+    });
+    setBoard((prevBoard) => {
+      const newBoard = [...prevBoard];
+      if (resetPosition[0] !== -1 && resetPosition[1] !== -1) {
+        newBoard[resetPosition[0]][resetPosition[1]] = resetPosition[2];
+        console.log("Successful reset!");
+      }
+      return newBoard;
+    });
     startNextTurn();
+    console.log(airplaneBoard.getBoardState());
   };
 
-  const boardMovement = [
-    [
-      [2, 2],
-      [2, 2],
-      [-1, -1],
-      [-1, -1],
-      [0, 5],
-      [0, 6],
-      [0, 7],
-      [0, 8],
-      [0, 9],
-      [0, 10],
-      [1, 11],
-      [-1, -1],
-      [-1, -1],
-      [2, 12],
-      [2, 12],
-    ],
-    [
-      [2, 2],
-      [2, 2],
-      [-1, -1],
-      [0, 4],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [2, 7],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [2, 12],
-      [-1, -1],
-      [2, 12],
-      [2, 12],
-    ],
-    [
-      [-1, -1],
-      [-1, -1],
-      [1, 3],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [3, 7],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [3, 13],
-      [-1, -1],
-      [-1, -1],
-    ],
-    [
-      [-1, -1],
-      [2, 2],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [4, 7],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [4, 14],
-      [-1, -1],
-    ],
-    [
-      [3, 1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [5, 7],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [5, 14],
-    ],
-    [
-      [4, 0],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [6, 7],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [6, 14],
-    ],
-    [
-      [5, 0],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [7, 7],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [7, 14],
-    ],
-    [
-      [6, 0],
-      [7, 2],
-      [7, 3],
-      [7, 4],
-      [7, 5],
-      [7, 6],
-      [7, 7],
-      [99, 99],
-      [7, 7],
-      [7, 8],
-      [7, 9],
-      [7, 10],
-      [7, 11],
-      [7, 12],
-      [8, 14],
-    ],
-    [
-      [7, 0],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [7, 7],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [9, 14],
-    ],
-    [
-      [8, 0],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [8, 7],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [10, 14],
-    ],
-    [
-      [9, 0],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [9, 7],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [11, 13],
-    ],
-    [
-      [-1, -1],
-      [10, 0],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [10, 7],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [12, 12],
-      [-1, -1],
-    ],
-    [
-      [-1, -1],
-      [-1, -1],
-      [11, 1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [11, 7],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [13, 11],
-      [-1, -1],
-      [-1, -1],
-    ],
-    [
-      [12, 2],
-      [12, 2],
-      [-1, -1],
-      [12, 2],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [12, 7],
-      [-1, -1],
-      [-1, -1],
-      [-1, -1],
-      [14, 10],
-      [-1, -1],
-      [12, 12],
-      [12, 12],
-    ],
-    [
-      [12, 2],
-      [12, 2],
-      [-1, -1],
-      [-1, -1],
-      [13, 3],
-      [14, 4],
-      [14, 5],
-      [14, 6],
-      [14, 7],
-      [14, 8],
-      [14, 9],
-      [-1, -1],
-      [-1, -1],
-      [12, 12],
-      [12, 12],
-    ],
-  ];
+  const colourCrossTile = (row: number, col: number) => {
+    if (board[col][row] !== -1) {
+      return "";
+    }
+    if (row === 7) {
+      if (col < 7) {
+        return "bg-orange-200 bg-opacity-60";
+      } else if (col > 7) {
+        return "bg-purple-400 bg-opacity-60";
+      }
+    } else if (col === 7) {
+      if (row < 7) {
+        return "bg-beige-300 bg-opacity-60";
+      } else if (row > 7) {
+        return "bg-pink-300 bg-opacity-60";
+      }
+    }
+    return "";
+  };
 
   return (
     //set the tiles to display the players on the current tile here
@@ -468,22 +269,24 @@ const AirplaneGameBoard: React.FC<AirplaneGameBoardProps> = ({ players }) => {
         <span className="flex flex-row py-2 items-center justify-center">
           {" "}
         </span>
-        <span>
+        <span className="cursor-default select-none">
           {board.map((col, indexCol) => {
             return (
               <div className="flex flex-row" key={indexCol}>
                 {col.map((row, indexRow) => {
                   return (
                     <div
-                      className={`flex flex-col w-6 h-6 rounded-2xl items-center justify-center text-slate-900 cursor-default ${
-                        initialiseGameBoard(indexRow, indexCol)
-                          ? "border border-sky-400"
-                          : ""
-                      } ${colourPlayerTile(row)} ${
+                      className={`flex flex-col w-6 h-6 rounded-2xl items-center justify-center text-slate-900 cursor-default
+                         ${colourCrossTile(indexRow, indexCol)} 
+                         ${
+                           initialiseGameBoard(indexRow, indexCol)
+                             ? "border border-sky-400"
+                             : ""
+                         } ${colourPlayerTile(indexCol, indexRow)} ${
                         selectedPiece[0] === indexCol &&
                         selectedPiece[1] === indexRow &&
                         isCurrentPlayerTile(indexCol, indexRow, turnPlayer)
-                          ? "ring-8"
+                          ? "ring-8 animate-pulse duration-[25]"
                           : ""
                       } ${
                         isCurrentPlayerTile(indexCol, indexRow, turnPlayer)
@@ -499,11 +302,11 @@ const AirplaneGameBoard: React.FC<AirplaneGameBoardProps> = ({ players }) => {
                       }
                       onClick={(e) => {
                         handleSelectPiece(e, indexCol, indexRow);
-                        console.log(indexCol, indexRow);
+                        console.log("Actual Index: ", indexCol, indexRow);
                       }}
                     >
-                      {isPlayerTile(indexCol, indexRow) ? (
-                        board[indexCol][indexRow]
+                      {playerTiles(indexCol, indexRow).length > 0 ? (
+                        playerTiles(indexCol, indexRow)[0][2]
                       ) : (
                         <p>&nbsp;</p>
                       )}
@@ -572,7 +375,9 @@ const AirplaneGameBoard: React.FC<AirplaneGameBoardProps> = ({ players }) => {
             </span>
             <span
               className="w-full px-2 py-0.5 menu-button hover:cursor-pointer"
-              onClick={moveSelectedPiece}
+              onClick={(e) => {
+                moveSelectedPiece(e, pieceNumber);
+              }}
             >
               Move selected piece
             </span>

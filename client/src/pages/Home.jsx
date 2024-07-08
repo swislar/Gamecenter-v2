@@ -67,7 +67,7 @@ const Home = () => {
         BGFrom="from-grey-blue"
         BGTo="to-sky-400"
       />,
-      "Work in Progress",
+      "Aeroplane Chess is a captivating board game where players aim to maneuver their four airplane tokens from their hangar to the center destination zone before their opponents. Landing on an opponent's airplane sends it back to the hangar, adding a tactical layer of blocking and risk management.",
     ],
     [
       <HomeGameCard
