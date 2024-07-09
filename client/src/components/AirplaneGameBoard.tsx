@@ -153,13 +153,13 @@ const AirplaneGameBoard: React.FC<AirplaneGameBoardProps> = ({
     }
     switch (playerTile[0][2]) {
       case 1:
-        return "bg-purple-300";
+        return "bg-purple-300 bg-opacity-100";
       case 2:
-        return "bg-pink-400";
+        return "bg-pink-400 bg-opacity-100";
       case 3:
-        return "bg-orange-300";
+        return "bg-orange-300 bg-opacity-100";
       case 4:
-        return "bg-red-200";
+        return "bg-red-200 bg-opacity-100";
       default:
         return "";
     }
@@ -179,11 +179,16 @@ const AirplaneGameBoard: React.FC<AirplaneGameBoardProps> = ({
     row: number,
     col: number
   ) => {
-    if (turnPlayer === Math.floor(board[row][col] / 10)) {
+    const playerIndex = airplaneBoard
+      .getBoardState()
+      .filter(
+        (coordinates) => coordinates[0] === row && coordinates[1] === col
+      );
+    if (playerIndex.length === 0) return;
+    else if (turnPlayer === playerIndex[0][2]) {
       setSelectedPiece([row, col]);
-      setPieceNumber(board[row][col] % 10);
+      setPieceNumber(playerIndex[0][3]);
     }
-    console.log("Item: ", board[row][col]);
   };
 
   const startNextTurn = () => {
@@ -217,36 +222,24 @@ const AirplaneGameBoard: React.FC<AirplaneGameBoardProps> = ({
       pieceNumber,
       diceRoll
     );
+    console.log("Result of moveTile: ", resetPosition);
     const newCoordinates = airplaneBoard.getCoordinates(
       turnPlayer,
       pieceNumber
     );
     console.log("New coordinates: ", newCoordinates);
-    setBoard((prevBoard) => {
-      const newBoard = [...prevBoard];
-      newBoard[oldCoordinates[0]][oldCoordinates[1]] = -1;
-      newBoard[newCoordinates[0]][newCoordinates[1]] = parseInt(
-        turnPlayer.toString().concat(pieceNumber.toString())
-      );
-      return newBoard;
-    });
-    setBoard((prevBoard) => {
-      const newBoard = [...prevBoard];
-      if (resetPosition[0] !== -1 && resetPosition[1] !== -1) {
-        newBoard[resetPosition[0]][resetPosition[1]] = resetPosition[2];
-        console.log("Successful reset!");
-      }
-      return newBoard;
-    });
-    startNextTurn();
+    if (resetPosition[0] !== -1 && resetPosition[1] !== -1) {
+      startNextTurn();
+    } else setErrorMessage("Invalid move! Move another piece");
     console.log(airplaneBoard.getBoardState());
   };
 
   const colourCrossTile = (row: number, col: number) => {
     if (board[col][row] !== -1) {
       return "";
-    }
-    if (row === 7) {
+    } else if (colourPlayerTile(col, row)) {
+      return "";
+    } else if (row === 7) {
       if (col < 7) {
         return "bg-orange-200 bg-opacity-60";
       } else if (col > 7) {
@@ -294,11 +287,11 @@ const AirplaneGameBoard: React.FC<AirplaneGameBoardProps> = ({
                           : ""
                       }`}
                       key={
-                        "R" +
+                        "Row" +
                         indexRow +
-                        "C" +
+                        "Col" +
                         indexCol +
-                        board[indexCol][indexRow].toString()
+                        playerTiles(indexCol, indexRow).toString()
                       }
                       onClick={(e) => {
                         handleSelectPiece(e, indexCol, indexRow);

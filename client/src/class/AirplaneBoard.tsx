@@ -256,9 +256,9 @@ const boardEdges = [
   ],
 ];
 
-// TODO: DISABLE OVERSHOT TO MIDDLE TILE
 // TODO: PREVENT MOVEMENT IF WIN
-// TODO: DO NOT START NEXT TURN IF THE CLICK IS NOT LEGAL (WALK OVER ONTO OWN TILE)
+// TODO: SCORE NUMBER OF TILES IN THE WINNING ZONE
+// TODO: LEADERBOARDS WITH BACKEND DB
 
 class AirplaneTile {
   private player: number;
@@ -343,6 +343,9 @@ class AirplaneTile {
       const newPos = boardEdges[currentRow][currentCol];
       currentRow = newPos[0];
       currentCol = newPos[1];
+      if (currentRow === 99 && currentCol === 99) {
+        break;
+      }
     }
     return [currentRow, currentCol];
   }
@@ -540,13 +543,33 @@ export class AirplaneBoard {
   }
 
   overlapTiles(player: number, piece: number, steps: number): boolean {
-    const newPosition =
-      this.getPlayerOneTiles()[piece].finalMovePosition(steps);
+    let newPosition: number[];
+    switch (player) {
+      case 1:
+        newPosition = this.getPlayerOneTiles()[piece].finalMovePosition(steps);
+        break;
+      case 2:
+        newPosition = this.getPlayerTwoTiles()[piece].finalMovePosition(steps);
+        break;
+      case 3:
+        newPosition =
+          this.getPlayerThreeTiles()[piece].finalMovePosition(steps);
+        break;
+      case 4:
+        newPosition = this.getPlayerFourTiles()[piece].finalMovePosition(steps);
+        break;
+      default:
+        console.log("Default overlapTiles with player: ", player);
+        newPosition = [-1, -1];
+        break;
+    }
     console.log("Expected new position: ", newPosition);
     const newRow = newPosition[0];
     const newCol = newPosition[1];
     if (newRow === 7 && newCol === 7) {
       return false;
+    } else if (newRow === 99 && newCol === 99) {
+      return true;
     }
     switch (player) {
       case 1:
@@ -587,13 +610,17 @@ export class AirplaneBoard {
     switch (player) {
       case 1:
         newPosition = this.getPlayerOneTiles()[piece].finalMovePosition(steps);
+        break;
       case 2:
         newPosition = this.getPlayerTwoTiles()[piece].finalMovePosition(steps);
+        break;
       case 3:
         newPosition =
           this.getPlayerThreeTiles()[piece].finalMovePosition(steps);
+        break;
       case 4:
         newPosition = this.getPlayerFourTiles()[piece].finalMovePosition(steps);
+        break;
     }
     const newRow = newPosition[0];
     const newCol = newPosition[1];
@@ -634,11 +661,13 @@ export class AirplaneBoard {
           pThreeCoordinates
         );
         break;
+      // 4 capture 1 works but 3 capture 2 fails
     }
     const captureCoordinates = positions.find(
       (coordinates, id) =>
         coordinates[0] === newRow && coordinates[1] === newCol
     );
+    console.log("Capture coordinates available: ", positions);
     if (captureCoordinates) {
       console.log("Captured: ", captureCoordinates);
       return captureCoordinates;
@@ -649,13 +678,12 @@ export class AirplaneBoard {
   }
 
   moveTile(player: number, piece: number, steps: number): number[] {
-    let result = [-1, -1]; // result is the new position of tile when reset
     if (this.overlapTiles(player, piece, steps)) {
-      return [-1, -1];
+      return [-1, -1]; // To prevent starting next turn
     }
     const capturedTile = this.capturedTile(player, piece, steps);
+    let foundTile: AirplaneTile | undefined;
     if (capturedTile[0] !== -1 && capturedTile[1] !== -1) {
-      let foundTile: AirplaneTile | undefined;
       switch (capturedTile[2]) {
         case 1:
           foundTile = this.getPlayerOneTiles().find(
@@ -663,11 +691,7 @@ export class AirplaneBoard {
               tile.getRow() === capturedTile[0] &&
               tile.getCol() === capturedTile[1]
           );
-          console.log("Found tile: ", foundTile);
-          if (foundTile) {
-            foundTile.resetPosition();
-            return foundTile.getOriginPosition();
-          }
+          console.log(foundTile);
           break;
         case 2:
           foundTile = this.getPlayerTwoTiles().find(
@@ -675,11 +699,7 @@ export class AirplaneBoard {
               tile.getRow() === capturedTile[0] &&
               tile.getCol() === capturedTile[1]
           );
-          console.log("Found tile: ", foundTile);
-          if (foundTile) {
-            foundTile.resetPosition();
-            return foundTile.getOriginPosition();
-          }
+          console.log(foundTile);
           break;
         case 3:
           foundTile = this.getPlayerThreeTiles().find(
@@ -687,11 +707,7 @@ export class AirplaneBoard {
               tile.getRow() === capturedTile[0] &&
               tile.getCol() === capturedTile[1]
           );
-          console.log("Found tile: ", foundTile);
-          if (foundTile) {
-            foundTile.resetPosition();
-            return foundTile.getOriginPosition();
-          }
+          console.log(foundTile);
           break;
         case 4:
           foundTile = this.getPlayerFourTiles().find(
@@ -699,11 +715,7 @@ export class AirplaneBoard {
               tile.getRow() === capturedTile[0] &&
               tile.getCol() === capturedTile[1]
           );
-          console.log("Found tile: ", foundTile);
-          if (foundTile) {
-            foundTile.resetPosition();
-            return foundTile.getOriginPosition();
-          }
+          console.log(foundTile);
           break;
       }
     }
@@ -721,7 +733,11 @@ export class AirplaneBoard {
         this.getPlayerFourTiles()[piece].moveTile(steps);
         break;
     }
-    return result;
+    if (foundTile) {
+      console.log("Position reset!");
+      foundTile.resetPosition();
+      return foundTile.getOriginPosition(); // Returns original position if captured
+    } else return [99, 99]; // The move is sucessful (normal)
   }
 
   checkWinner(): number {
